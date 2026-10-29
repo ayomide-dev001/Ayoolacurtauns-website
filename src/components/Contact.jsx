@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-const whatsappNumber = "+234 704 708 7597"; // Add your WhatsApp number: country code + number, without +
+const whatsappNumber = "2347047087597";
+
+const web3FormsAccessKey = "34031b1f-2638-4666-bdec-55ecc62d5be5";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -10,30 +12,45 @@ export default function Contact() {
     message: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState({
+    type: "",
+    message: "",
+  });
+  const [whatsappLink, setWhatsappLink] = useState("");
+
   const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!whatsappNumber) {
-      alert(
-        "Please add your business WhatsApp number in Contact.jsx before using the enquiry form.",
-      );
+    setStatus({ type: "", message: "" });
+    setWhatsappLink("");
+
+    if (!web3FormsAccessKey) {
+      setStatus({
+        type: "error",
+        message: "The contact form is not configured yet.",
+      });
       return;
     }
 
-    const message = `
+    setIsSubmitting(true);
+
+    const enquiryMessage = `
 Hello AYOOLA CURTAINS,
 
 I would like to make an enquiry.
 
 Name: ${formData.name}
-Email: ${formData.email}
+Email: ${formData.email || "Not provided"}
 Service: ${formData.service}
 
 Message:
@@ -42,11 +59,66 @@ ${formData.message}
 I understand that you serve customers across Nigeria.
     `.trim();
 
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-      message,
-    )}`;
+    const payload = {
+      access_key: web3FormsAccessKey,
+      subject: `New AYOOLA CURTAINS Enquiry - ${formData.name}`,
+      from_name: "AYOOLA CURTAINS Website",
+      name: formData.name,
+      email: formData.email,
+      service: formData.service,
+      message: formData.message,
+      botcheck: "",
+    };
 
-    window.open(whatsappLink, "_blank", "noopener,noreferrer");
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message ||
+            "Your enquiry could not be submitted. Please try again.",
+        );
+      }
+
+      const cleanNumber = whatsappNumber.replace(/\D/g, "");
+
+      const link = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(
+        enquiryMessage,
+      )}`;
+
+      setWhatsappLink(link);
+
+      setStatus({
+        type: "success",
+        message:
+          "Your enquiry has been submitted successfully! You can also continue with WhatsApp below.",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        service: "",
+        message: "",
+      });
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message:
+          error.message ||
+          "Something went wrong. Please check your internet connection and try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -54,14 +126,12 @@ I understand that you serve customers across Nigeria.
       id="contact"
       className="relative overflow-hidden bg-[#f7f4ee] px-5 py-20 sm:px-8 sm:py-28 lg:px-12 lg:py-32"
     >
-      {/* Decorative background detail */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -right-32 top-20 h-80 w-80 rounded-full border border-[#b89b68]/20"
       />
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Section heading */}
         <div className="mx-auto mb-14 max-w-3xl text-center sm:mb-20">
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.35em] text-[#947447] sm:text-sm">
             Let&apos;s Create Something Beautiful
@@ -81,9 +151,7 @@ I understand that you serve customers across Nigeria.
           </p>
         </div>
 
-        {/* Contact layout */}
         <div className="grid overflow-hidden rounded-sm border border-[#ded5c6] bg-white shadow-[0_25px_80px_rgba(48,38,25,0.08)] lg:grid-cols-[0.85fr_1.15fr]">
-          {/* Left information panel */}
           <div className="relative overflow-hidden bg-[#28251f] px-7 py-10 text-white sm:px-10 sm:py-14 lg:px-12 lg:py-16">
             <div
               aria-hidden="true"
@@ -126,22 +194,17 @@ I understand that you serve customers across Nigeria.
             </div>
 
             <a
-              href={
-                whatsappNumber
-                  ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                      "Hello AYOOLA CURTAINS, I would like to enquire about your services.",
-                    )}`
-                  : "#contact-form"
-              }
-              target={whatsappNumber ? "_blank" : undefined}
-              rel={whatsappNumber ? "noopener noreferrer" : undefined}
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                "Hello AYOOLA CURTAINS, I would like to enquire about your services.",
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="relative mt-10 inline-flex min-h-12 items-center justify-center border border-[#c7a76d] px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#e4c992] transition-colors duration-300 hover:bg-[#c7a76d] hover:text-[#28251f] sm:text-sm"
             >
               Enquire on WhatsApp <span className="ml-4">↗</span>
             </a>
           </div>
 
-          {/* Right enquiry form */}
           <div
             id="contact-form"
             className="min-w-0 px-6 py-10 sm:px-10 sm:py-14 lg:px-12 lg:py-16"
@@ -159,21 +222,31 @@ I understand that you serve customers across Nigeria.
             </p>
 
             <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+              {/* Honeypot field to help filter spam bots */}
+              <input
+                type="checkbox"
+                name="botcheck"
+                className="hidden"
+                tabIndex="-1"
+                autoComplete="off"
+              />
+
               <div>
                 <label
-                  htmlFor="name"
+                  htmlFor="contact-name"
                   className="mb-2 block text-sm font-medium text-[#39342d]"
                 >
                   Your full name
                 </label>
                 <input
-                  id="name"
+                  id="contact-name"
                   name="name"
                   type="text"
                   autoComplete="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Enter your name"
+                  maxLength={100}
                   required
                   className="min-h-12 w-full min-w-0 border border-[#ded7cc] bg-[#fdfcf9] px-4 py-3 text-base text-[#29251f] placeholder:text-[#8b8377] outline-none transition focus:border-[#947447] focus:ring-2 focus:ring-[#947447]/20"
                 />
@@ -181,33 +254,34 @@ I understand that you serve customers across Nigeria.
 
               <div>
                 <label
-                  htmlFor="email"
+                  htmlFor="contact-email"
                   className="mb-2 block text-sm font-medium text-[#39342d]"
                 >
                   Email address{" "}
                   <span className="font-normal text-[#766e62]">(optional)</span>
                 </label>
                 <input
-                  id="email"
+                  id="contact-email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
+                  maxLength={254}
                   className="min-h-12 w-full min-w-0 border border-[#ded7cc] bg-[#fdfcf9] px-4 py-3 text-base text-[#29251f] placeholder:text-[#8b8377] outline-none transition focus:border-[#947447] focus:ring-2 focus:ring-[#947447]/20"
                 />
               </div>
 
               <div>
                 <label
-                  htmlFor="service"
+                  htmlFor="contact-service"
                   className="mb-2 block text-sm font-medium text-[#39342d]"
                 >
                   What are you looking for?
                 </label>
                 <select
-                  id="service"
+                  id="contact-service"
                   name="service"
                   value={formData.service}
                   onChange={handleChange}
@@ -233,18 +307,19 @@ I understand that you serve customers across Nigeria.
 
               <div>
                 <label
-                  htmlFor="message"
+                  htmlFor="contact-message"
                   className="mb-2 block text-sm font-medium text-[#39342d]"
                 >
                   Tell us about your project
                 </label>
                 <textarea
-                  id="message"
+                  id="contact-message"
                   name="message"
                   rows="4"
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Your preferred style, location, room type or any questions..."
+                  maxLength={5000}
                   required
                   className="w-full min-w-0 resize-y border border-[#ded7cc] bg-[#fdfcf9] px-4 py-3 text-base leading-7 text-[#29251f] placeholder:text-[#8b8377] outline-none transition focus:border-[#947447] focus:ring-2 focus:ring-[#947447]/20"
                 />
@@ -252,14 +327,41 @@ I understand that you serve customers across Nigeria.
 
               <button
                 type="submit"
-                className="flex min-h-14 w-full items-center justify-center gap-3 bg-[#29251f] px-6 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-[#947447] focus:outline-none focus:ring-2 focus:ring-[#947447] focus:ring-offset-2 sm:text-sm"
+                disabled={isSubmitting}
+                className="flex min-h-14 w-full items-center justify-center gap-3 bg-[#29251f] px-6 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-white transition duration-300 hover:bg-[#947447] disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-[#947447] focus:ring-offset-2 sm:text-sm"
               >
-                Prepare WhatsApp Enquiry <span>↗</span>
+                {isSubmitting ? "Sending Enquiry..." : "Submit Enquiry"}
+                {!isSubmitting && <span>↗</span>}
               </button>
 
+              {status.message && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className={`rounded-sm p-4 text-sm leading-6 ${
+                    status.type === "success"
+                      ? "bg-green-50 text-green-800"
+                      : "bg-red-50 text-red-800"
+                  }`}
+                >
+                  <p>{status.message}</p>
+
+                  {status.type === "success" && whatsappLink && (
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 font-semibold underline underline-offset-4"
+                    >
+                      Continue to WhatsApp ↗
+                    </a>
+                  )}
+                </div>
+              )}
+
               <p className="text-center text-xs leading-6 text-[#766e62]">
-                Your enquiry will open in WhatsApp. Please review your message
-                and press Send to contact us.
+                Your enquiry will be sent securely through our form service. You
+                can also continue your conversation with us on WhatsApp.
               </p>
             </form>
           </div>
