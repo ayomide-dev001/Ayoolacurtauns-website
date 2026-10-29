@@ -6,6 +6,7 @@ import Project from "./components/Project";
 import Journal from "./components/Journal";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import ScrollReveal from "./components/ScrollReveal";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Journal />
       <Contact />
       <Footer />
+      <ScrollReveal />
 
       {/* <section
         id="about"
