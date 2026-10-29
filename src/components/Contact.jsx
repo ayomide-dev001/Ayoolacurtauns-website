@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const whatsappNumber = "2347047087597";
 
-const web3FormsAccessKey = "34031b1f-2638-4666-bdec-55ecc62d5be5";
+const web3FormsAccessKey = "8d3e12f2-408b-4130-bcad-bdcafbf1e6b9";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
