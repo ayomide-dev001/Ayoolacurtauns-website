@@ -4,8 +4,7 @@ const services = [
     title: "Custom-Made Curtains",
     description:
       "Beautifully tailored curtains designed to complement your windows, personal style, and interior.",
-    image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=900&q=85",
+    image: "/images/Ayoola-Curtains.jpeg",
     alt: "Elegant living room with refined interior decor",
   },
   {
@@ -13,8 +12,7 @@ const services = [
     title: "Curtain Installation",
     description:
       "Careful installation that gives your curtains a neat finish and transforms the look of your windows.",
-    image:
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=900&q=85",
+    image: "/images/ayoola curtains.jpeg",
     alt: "Beautifully styled modern interior",
   },
   {
