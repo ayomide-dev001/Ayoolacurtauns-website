@@ -90,7 +90,7 @@ export default function Gallery() {
           </p>
         </div>
 
-        {/* Inspiration notice */}
+        {/* Inspiration notice
         <div className="mb-8 border-l-2 border-[#b89b68] bg-white/70 px-5 py-4">
           <p className="text-sm leading-7 text-[#625b50]">
             <span className="font-semibold text-[#29251f]">
@@ -99,7 +99,7 @@ export default function Gallery() {
             These photographs illustrate interior styles and are not
             representations of completed AYOOLA CURTAINS projects.
           </p>
-        </div>
+        </div> */}
 
         {/* Gallery grid */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">

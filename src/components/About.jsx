@@ -79,7 +79,7 @@ export default function About() {
         <div className="group relative">
           <div className="relative h-[420px] overflow-hidden sm:h-[560px]">
             <img
-              src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85"
+              src="/images/WhatsApp Image 2026-10-29 at 10.25.27 (1).jpeg"
               alt="Elegant interior with carefully selected furnishings"
               loading="lazy"
               className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
