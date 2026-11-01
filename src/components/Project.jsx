@@ -66,7 +66,7 @@ export default function Gallery() {
 
   return (
     <section
-      id="gallery"
+      id="projects"
       className="bg-[#f7f4ee] px-5 py-20 sm:px-8 sm:py-28 lg:px-12 lg:py-32"
     >
       <div className="mx-auto max-w-7xl">

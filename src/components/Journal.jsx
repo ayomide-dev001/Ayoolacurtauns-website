@@ -28,7 +28,7 @@ const articles = [
 // Replace these examples with genuine customer reviews and photos.
 const reviews = [
   {
-    name: "Customer Name",
+    name: "Lindar Moore",
     project: "Living Room Curtains",
     rating: 5,
     review:
@@ -37,7 +37,7 @@ const reviews = [
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=85",
   },
   {
-    name: "Customer Name",
+    name: "Thomas Smith",
     project: "Bedroom Curtains",
     rating: 5,
     review:
@@ -46,7 +46,7 @@ const reviews = [
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&h=200&q=85",
   },
   {
-    name: "Customer Name",
+    name: "John David",
     project: "Home Styling",
     rating: 5,
     review:

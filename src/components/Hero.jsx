@@ -48,7 +48,7 @@ export default function Hero() {
           {/* Call to action */}
           <div className="mt-9 flex flex-wrap items-center gap-6">
             <a
-              id="#projects"
+              id="projects"
               href="#projects"
               className="group inline-flex items-center gap-8 bg-white px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-stone-900 transition-all duration-300 hover:-translate-y-1 hover:bg-stone-200 sm:text-xs"
             >
